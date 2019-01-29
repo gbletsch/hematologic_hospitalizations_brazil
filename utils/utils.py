@@ -1,5 +1,5 @@
 import os
-from pathlib import Path
+# from pathlib import Path
 
 import wget
 
@@ -11,45 +11,49 @@ from tempfile import NamedTemporaryFile
 from dbfread import DBF
 import time
 
+from utils import CACHEPATH, RAW_DATA, PRODUCED_DATASETS
 
 
-def create_cache_path():
-    '''create cache directory
-    Returns
-    -------
-        CACHEPATH, RAW_DATA, PRODUCED_DATASETS
-    '''
-    if not os.path.exists(os.path.join(Path.home(), 'tcc_hemato_sus')):
-        os.mkdir(os.path.join(Path.home(), 'tcc_hemato_sus'))
 
-    CACHEPATH = os.path.join(Path.home(), 'tcc_hemato_sus')
+# def create_cache_path():
+#     '''create cache directory
+#     Returns
+#     -------
+#         CACHEPATH, RAW_DATA, PRODUCED_DATASETS
+#     '''
+#     if not os.path.exists(os.path.join(Path.home(), 'tcc_hemato_sus')):
+#         os.mkdir(os.path.join(Path.home(), 'tcc_hemato_sus'))
 
-    for f in ['produced_datasets', 'raw_data']:
-        if not os.path.exists(os.path.join(Path(CACHEPATH), f)):
-            os.mkdir(os.path.join(Path(CACHEPATH), f))
-    PRODUCED_DATASETS = os.path.join(Path(CACHEPATH), 'produced_datasets')
-    RAW_DATA = os.path.join(Path(CACHEPATH), 'raw_data')
+#     CACHEPATH = os.path.join(Path.home(), 'tcc_hemato_sus')
 
-    return CACHEPATH, RAW_DATA, PRODUCED_DATASETS
+#     for f in ['produced_datasets', 'raw_data']:
+#         if not os.path.exists(os.path.join(Path(CACHEPATH), f)):
+#             os.mkdir(os.path.join(Path(CACHEPATH), f))
+#     PRODUCED_DATASETS = os.path.join(Path(CACHEPATH), 'produced_datasets')
+#     RAW_DATA = os.path.join(Path(CACHEPATH), 'raw_data')
+
+#     return CACHEPATH, RAW_DATA, PRODUCED_DATASETS
 
 
 def download_file(filename, ftp_url, local_folder, force_download):
     """Download files if it doesn't exist and save locally in .parquet file."""
     local_file = os.path.join(local_folder, filename) + '.parquet'
     local_file_dbc = os.path.join(local_folder, filename) + '.dbc'
-    url_file = ftp_url + filename + '.dbc'
+    url_file = ftp_url + '/' + filename + '.dbc'
+    print(url_file)
     if not os.path.exists(local_file) or force_download == 'deep':
-        print('parquet não existe')
+#         print('parquet não existe')
         if not os.path.exists(local_file_dbc) or force_download == 'deep':
-            print('dbc não existe')
             try:
                 wget.download(url_file, local_file)
-            except URLError:
+#                 print('downloading', url_file)
+            except:
+#                 print('deu merda')
                 time.sleep(60)
                 download_file(filename, ftp_url, local_folder, force_download)
-        print('fazendo parquet')
         df = read_dbc(local_file_dbc, encoding='iso-8859-1')
         df.to_parquet(local_file, engine='fastparquet')
+        print('saving', local_file)
 
 
 def _mem_usage(pandas_obj):
@@ -352,4 +356,4 @@ def make_all_dataset(force_download='no'):
     return df_final
 
 
-CACHEPATH, RAW_DATA, PRODUCED_DATASETS = create_cache_path()
+# CACHEPATH, RAW_DATA, PRODUCED_DATASETS = create_cache_path()
