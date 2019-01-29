@@ -119,6 +119,10 @@ def optimize_df(df):
     print('Optimized df size:', _mem_usage(optimized_gl))
 
     df = df.astype(column_types)
+    
+    # especific for hemato dataset
+    df.DT_INTER = pd.to_datetime(df.DT_INTER)
+    df.DT_SAIDA = pd.to_datetime(df.DT_SAIDA)
 
     return df
 
@@ -273,7 +277,7 @@ def select_columns_and_cids(temp_df, state):
 def make_all_dataset(force_download='no'):
     '''
     Make all hematologic internations from Brazil in the interval 2008 to 2017.
-    When all in cache, takes only about 40" to parse all dataset.
+    When all in cache, takes only about 20" to parse all dataset.
     
     Download from DATASUS ftp when not availiable locally and save each year in a .parquet format.
     It takes about 45' to parse all .dbc files again using all files loccally (force_download='soft'), and hours to download them (force_download='deep' or first download).
