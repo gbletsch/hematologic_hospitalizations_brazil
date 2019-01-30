@@ -6,6 +6,8 @@ import wget
 import pandas as pd
 import numpy as np
 
+import matplotlib.pyplot as plt
+
 from _readdbc import ffi, lib
 from tempfile import NamedTemporaryFile
 from dbfread import DBF
@@ -13,6 +15,7 @@ import time
 
 from utils import CACHEPATH, RAW_DATA, PRODUCED_DATASETS
 
+months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
 
 
 # def create_cache_path():
@@ -354,6 +357,52 @@ def make_all_dataset(force_download='no'):
     df_final.to_parquet(os.path.join(PRODUCED_DATASETS, 'all_hemato_df.parquet'))
 
     return df_final
+
+
+def make_weekly_graph(hemato):
+    '''
+    # Internações por dia da semana, em cada mês
+    # (planejamento de plantões/sobreavisos)
+    # não é a prevalência, é o número de novas internações (incidência)
+    # TODO: fazer bootstrap para ver significância, fazer prevalência
+
+    '''
+    pivoted = hemato.pivot_table('N_AIH', index=hemato.DT_INTER.dt.weekday, columns=hemato.DT_INTER.dt.month,
+                                 aggfunc='count')
+
+    pivoted.columns.name = None
+    pivoted.columns = months
+    pivoted.index.name = None
+
+    pivoted.plot(figsize=(12, 8), legend=True)
+    plt.xticks(np.arange(7), ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'])
+    plt.ylabel('Número de internações')
+    plt.title('Internações por dia da semana a cada mês:')
+    plt.show()
+    print('Parece que não muda muito o padrão.')
+
+
+def make_daily_int_each_month(hemato):
+
+    # Internações por dia, em cada mês
+    # (planejamento de plantões/sobreavisos)
+    # não é a prevalência, é o número de novas internações (incidência)
+
+
+    pivoted = hemato.pivot_table('N_AIH', index=hemato.DT_INTER.dt.day, columns=hemato.DT_INTER.dt.month,
+                                 aggfunc='count')
+
+    pivoted.columns.name = None
+    pivoted.columns = months
+    pivoted.index.name = None
+
+    pivoted.plot(figsize=(12, 8), legend=True, alpha=.9,
+                 xticks=(np.arange(1, 32)), yticks=(np.arange(4601, step=500)), ylim=(0, 3000))
+    plt.title('Internações totais por dia do mês:')
+    plt.ylabel('Número de internações')
+    plt.xlabel('Dia do mês')
+    plt.show()
+
 
 
 # CACHEPATH, RAW_DATA, PRODUCED_DATASETS = create_cache_path()
