@@ -211,7 +211,7 @@ def select_columns_and_cids(temp_df, state):
                        'NATUREZA', 'NAT_JUR', 'RUBRICA', 'IND_VDRL', 'TOT_PT_SP', 'HOMONIMO', 'NUM_FILHOS',
                        'CONTRACEP1', 'CONTRACEP2', 'GESTRISCO', 'SEQ_AIH5', 'CNAER', 'GESTOR_COD', 'GESTOR_TP',
                        'GESTOR_CPF', 'REGCT', 'SEQUENCIA', 'REMESSA', 'TPDISEC1', 'TPDISEC2', 'TPDISEC3',
-                       'TPDISEC4', 'TPDISEC5', 'TPDISEC6', 'TPDISEC7', 'TPDISEC8', 'TPDISEC9']
+                       'TPDISEC4', 'TPDISEC5', 'TPDISEC6', 'TPDISEC7', 'TPDISEC8', 'TPDISEC9', 'DIAG_SECUN']
     l = []
     while True:
         try:  # dealing with differents ds
