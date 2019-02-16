@@ -109,3 +109,8 @@ Untitled.ipynb
 IT_SIHSUS_1603.pdf
 pop_ibge_scratch.ipynb
 *.png
+*old*
+
+# others
+dask-worker-space/
+

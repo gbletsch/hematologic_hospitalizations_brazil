@@ -1,2 +1,2 @@
 test:
-	python -m pytest utils
+	python -m pytest tests
