@@ -114,3 +114,6 @@ pop_ibge_scratch.ipynb
 # others
 dask-worker-space/
 
+all_hemato.parquet
+files/
+

@@ -6,7 +6,7 @@ import os
 import dask.dataframe as dd
 import pickle
 
-from pydbc.readdbc import read_dbc
+# from pysus.utilities.readdbc import read_dbc
 import wget
 import random
 from zipfile import ZipFile
@@ -16,12 +16,13 @@ from dbfread import DBF
 import warnings
 warnings.filterwarnings('ignore')
 
-from utils import CACHEPATH, RAW_DATA, PRODUCED_DATASETS, ALL_FILES
+from v1.utils import CACHEPATH, RAW_DATA, PRODUCED_DATASETS, ALL_FILES
 
+'''
 def _download_rdc_file(filename):
-    '''
-    Download rdc files from the datasus ftp if it doesn't exist and save locally in .parquet file. 
-    '''
+    ''''''
+    # Download rdc files from the datasus ftp if it doesn't exist and save locally in .parquet file. 
+    ''''''
     if not filename.startswith('RD') and not filename.endswith('.dbc'):
         raise NameError('filename must be a valid SIH SUS .dbc file')
 
@@ -71,13 +72,13 @@ def _make_all_files_parquet():
 
     
 def make_all_dataset(force_download=False):
-    '''
+    ''''''''
     Make all hematologic internations from Brazil in the interval 2008 to 2017.
     When all in cache, takes only about 20" to parse all dataset.
     
     Download from DATASUS ftp when not availiable locally and save each year in a .parquet format.
     It takes about 45' to parse all .dbc files again using all files loccally (force_download='soft'), 
-    and hours to download them (force_download='deep' or first download).
+    and ~8 hours to download them (force_download='deep' or first download).
     
     Parameters
     ----------
@@ -91,7 +92,7 @@ def make_all_dataset(force_download=False):
     Returns
     -------
         pandas.DataFrame
-    '''
+    ''''''
     if force_download and os.path.exists(ALL_FILES):
         os.unlink(ALL_FILES)
 
@@ -136,7 +137,7 @@ def _download_all_files():
                 print('.', end = ' ')
                 df = _download_rdc_file(filename)
     print()
-
+'''
     
 def download_zip(url, force_download=False, prefix=None):
     '''
@@ -217,6 +218,19 @@ def make_maps(force_download=False):
             for i in list_ign:
                 mun_map[i] = 'Ignorado ou exterior'
 
+        # CARATEND.CNV
+        with zfile.open('CARATEND.CNV') as file:
+            caratend_map = pd.read_table(file, sep=b'\s{2,}', engine='python', encoding='iso-8859-1',
+                                       skiprows=1, header=None).applymap(func_decode)
+            caratend_map = { '01': 'Eletivo',
+                             '02': 'Urgência',
+                             '03': 'Acidente no local trabalho ou a serv da empresa',
+                             '04': 'Acidente no trajeto para o trabalho',
+                             '05': 'Outros tipo de acidente de trânsito',
+                             '06': 'Out tp lesões e envenen por agent quím físicos'}
+            #fiz manualmente porque não funcionou o encoding e o decode
+    
+        
         # COMPLEX2.CNV
         with zfile.open('COMPLEX2.CNV') as file:
             comp_map = pd.read_table(file, sep=b'\s{2,}', engine='python', encoding='iso-8859-1',
@@ -287,7 +301,7 @@ def make_maps(force_download=False):
         
     
     
-    return sex_map, cnes_map, uf_map, cid_map, et_map, financ_map, cbo_map, comp_map, mun_map
+    return sex_map, cnes_map, uf_map, cid_map, et_map, financ_map, cbo_map, comp_map, mun_map, caratend_map
 
 
 def func_decode(x):
