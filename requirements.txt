@@ -7,7 +7,6 @@ git+https://github.com/gbletsch/optimizedf.git
 wget
 
 numpy
-os
 
 pickle
 
