@@ -4,8 +4,6 @@ ipywidgets
 pysus
 git+https://github.com/gbletsch/optimizedf.git
 
-logging
-itertools
 wget
 
 numpy
