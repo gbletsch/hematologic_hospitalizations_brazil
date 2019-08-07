@@ -4,7 +4,6 @@ ipywidgets
 pysus
 git+https://github.com/gbletsch/optimizedf.git
 
-time
 logging
 itertools
 wget
