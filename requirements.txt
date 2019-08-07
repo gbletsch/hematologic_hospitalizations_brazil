@@ -2,7 +2,7 @@ seaborn
 matplotlib
 ipywidgets
 pysus
-optimizedf
+git+https://github.com/gbletsch/optimizedf.git
 
 time
 logging
