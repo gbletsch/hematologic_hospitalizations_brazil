@@ -8,8 +8,5 @@ wget
 
 numpy
 
-re
 dbfread
-
-warnings
 
