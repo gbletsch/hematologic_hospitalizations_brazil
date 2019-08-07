@@ -8,9 +8,6 @@ wget
 
 numpy
 
-pickle
-
-random
 zipfile
 re
 dbfread
